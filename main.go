@@ -11,6 +11,7 @@ var drivers = map[string]Driver{}
 
 func main() {
 	go web_startup()
+	parse_screens()
 
 	lgx := logix.NewLogixDriver("GaragePLC", "192.168.2.241", time.Second)
 	drivers[lgx.Name()] = lgx

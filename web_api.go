@@ -21,7 +21,9 @@ func web_startup() {
 	//mux.HandleFunc("/", api_version)
 	mux.HandleFunc("/read/{driver}/{tag...}", api_read)
 	mux.HandleFunc("/read_multi/", api_read_multi)
-	mux.HandleFunc("/read/{driver}/{tag...}", api_write)
+	mux.HandleFunc("/write/{driver}/{tag...}", api_write)
+	mux.HandleFunc("/view/{screen}", api_view)
+	mux.Handle("/", http.FileServer(http.Dir("./static")))
 
 	var handler http.Handler = mux
 
