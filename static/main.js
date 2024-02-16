@@ -200,10 +200,12 @@ function get_all_datapoints(){
 	};
 
 	xmlhttp.overrideMimeType("application/json");
-	var path =  "/read_multi/"
-	xmlhttp.open("POST", path);
-	xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-	xmlhttp.send(JSON.stringify(paths));
+	if (paths.length > 0){
+		var path =  "/read_multi/"
+		xmlhttp.open("POST", path);
+		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+		xmlhttp.send(JSON.stringify(paths));
+	}
 };
 
 

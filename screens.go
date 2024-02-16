@@ -2,49 +2,62 @@ package main
 
 import (
 	"fmt"
-	"html/template"
-	"log/slog"
+	"io"
 	"net/http"
+	"path/filepath"
+	"strings"
+
+	"github.com/nikolalohinski/gonja/v2"
+	"github.com/nikolalohinski/gonja/v2/exec"
 )
-
-var screen_templates *template.Template
-
-func parse_screens() {
-	t, err := template.ParseGlob("./screens/*.html")
-	if err != nil {
-		slog.Error("problem parsing templates: %w", err)
-		return
-	}
-	screen_templates = t
-}
-
-type ScreenData struct {
-	Title string
-}
 
 func api_view(w http.ResponseWriter, req *http.Request) {
 	screen_name := req.PathValue("screen")
 
-	full_screen_name := fmt.Sprintf("%s.html", screen_name)
+	full_screen_name := filepath.Join(".", "screens", fmt.Sprintf("%s.html", screen_name))
+	//full_screen_name := fmt.Sprintf(".screens/%s.html", screen_name)
 
 	if screen_name == "" {
 		// TODO: go to a home page or something
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	t := screen_templates.Lookup(full_screen_name)
-	if t == nil {
+	subtemplate, err := gonja.FromFile(full_screen_name)
+	if err != nil || subtemplate == nil {
 		w.WriteHeader(http.StatusNotFound)
+		io.WriteString(w, "could not get screen html file\n")
+		io.WriteString(w, err.Error())
 		return
 	}
 
-	dat := ScreenData{
-		Title: screen_name,
+	page_data, err := subtemplate.ExecuteToString(nil)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		io.WriteString(w, "could not get execute page\n")
+		io.WriteString(w, err.Error())
+		return
+	}
+	template, err := gonja.FromFile("./screens/main.html")
+	if err != nil || subtemplate == nil {
+		w.WriteHeader(http.StatusNotFound)
+		io.WriteString(w, "could not get main screen html file\n")
+		io.WriteString(w, err.Error())
+		return
+	}
+
+	dat := exec.NewContext(map[string]any{
+		"Title": screen_name,
+		"Body":  page_data,
+	})
+	final_page_data := strings.Builder{}
+	err = template.Execute(&final_page_data, dat)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		io.WriteString(w, "could not get execute main page with content\n")
+		io.WriteString(w, err.Error())
+		return
 	}
 
 	w.Header().Set("Content-Type", "text/html")
-	err := t.Execute(w, dat)
-	if err != nil {
-		slog.Error("problem with %s: %w", screen_name, err)
-	}
+	io.WriteString(w, final_page_data.String())
 }

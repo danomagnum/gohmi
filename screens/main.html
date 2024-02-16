@@ -2,7 +2,7 @@
  <html>
 
 <head>
-<title>{{ .title }}</title>
+<title>{{ title }}</title>
 <link rel="stylesheet" href="/main.css">
 </head>
 
@@ -10,3 +10,16 @@
 </script>
 
 <body>
+{{ Body | safe }}
+
+
+
+<script type="text/javascript">
+startup();
+</script>
+
+<div class="footer">
+<a href="/edit/{{screenid}}">Edit</a>
+</div>
+</body>
+</html>
