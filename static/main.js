@@ -296,7 +296,7 @@ function update_graph(element){
 	var dy = y1 - y0;
 
 
-	var drawpos = (val - y0) / dy * h;
+	var drawpos = h - ((val - y0) / dy * h);
 
 	shiftContext(ctx, w, h, -shift, 0);   
 	ctx.beginPath();
