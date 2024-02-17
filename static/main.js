@@ -85,9 +85,11 @@ function update_element_bulk(element, response){
 		if (element.classList.contains("multistate_indicator")){
 			update_indicator(element);
 		}
+		/*
 		if (element.classList.contains("graph")){
 			update_graph(element);
 		}
+		*/
 	}
 
 	if (element.hasAttribute("onchange")){
@@ -141,9 +143,11 @@ function update_element(element, response){
 		if (element.classList.contains("multistate_indicator")){
 			update_indicator(element);
 		}
+		/*
 		if (element.classList.contains("graph")){
 			update_graph(element);
 		}
+		*/
 	}
 
 	if (element.hasAttribute("onchange")){
@@ -244,70 +248,6 @@ function shiftContext(ctx, w, h, dx, dy) {
 }
 
 
-function update_graph(element){
-	var ctx = element.getContext( "2d" );
-	var w = element.width;
-	var h = element.height;
-	var shift = 1;
-	var y0 = 0;
-	var y1 = 0;
-	var val = parseFloat(element.innerHTML);
-	var secs = 60;
-	var pencolor = "#000000";
-
-
-	if (element.hasAttribute("data-pencolor")){
-		pencolor = element.getAttribute("data-pencolor") ;
-	}
-
-	if (element.hasAttribute("data-secs")){
-		secs = element.getAttribute("data-secs") ;
-	}
-	shift = w / secs;
-	
-	if (! element.hasAttribute("data-y0")){
-		if ( element.hasAttribute("data-min")){
-			y0 = element.getAttribute("data-min") ;
-		}
-
-		if (val < y0){
-			element.setAttribute("data-min", val);
-		}
-	}else{
-		y0 = element.getAttribute("data-y0");
-	}
-	
-	if (! element.hasAttribute("data-y1")){
-		if (element.hasAttribute("data-max")){
-			y1 = element.getAttribute("data-max") ;
-		}
-
-		if (val > y1){
-			element.setAttribute("data-max", val);
-		}
-	}else{
-		y1 = element.getAttribute("data-y1");
-	}
-
-
-
-	var last = element.getAttribute("data-last");
-
-	var dy = y1 - y0;
-
-
-	var drawpos = h - ((val - y0) / dy * h);
-
-	shiftContext(ctx, w, h, -shift, 0);   
-	ctx.beginPath();
-	ctx.moveTo(w-shift,last);
-	ctx.lineTo(w, drawpos);
-	ctx.strokeStyle = pencolor;
-	ctx.stroke();
-
-	element.setAttribute("data-last", drawpos);
-
-}
 
 
 
