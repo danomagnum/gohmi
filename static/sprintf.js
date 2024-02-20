@@ -1,4 +1,5 @@
 /* global window, exports, define */
+// https://github.com/alexei/sprintf.js
 
 !function() {
     'use strict'

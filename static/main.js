@@ -7,7 +7,6 @@ function update_element_bulk(element, response){
 	// the response here will have the driver/ at the beginning of the tag path.
 	// The goal is to have less requests to the base server by combining them.
 	var tagpath = element.getAttribute("data-target");
-	var prefix = ""
 
 	var tagname = tagpath;
 	var newdata =  response[tagname];

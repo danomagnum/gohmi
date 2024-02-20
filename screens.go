@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,11 +12,12 @@ import (
 	"github.com/nikolalohinski/gonja/v2/exec"
 )
 
+var screenDir = flag.String("screendir", ".screens", "directory where screen .html files are located")
+
 func api_view(w http.ResponseWriter, req *http.Request) {
 	screen_name := req.PathValue("screen")
 
-	full_screen_name := filepath.Join(".", "screens", fmt.Sprintf("%s.html", screen_name))
-	//full_screen_name := fmt.Sprintf(".screens/%s.html", screen_name)
+	full_screen_name := filepath.Join(*screenDir, fmt.Sprintf("%s.html", screen_name))
 
 	if screen_name == "" {
 		// TODO: go to a home page or something
@@ -37,7 +39,7 @@ func api_view(w http.ResponseWriter, req *http.Request) {
 		io.WriteString(w, err.Error())
 		return
 	}
-	template, err := gonja.FromFile("./screens/main.html")
+	template, err := gonja.FromFile(filepath.Join(*screenDir, "main.html"))
 	if err != nil || subtemplate == nil {
 		w.WriteHeader(http.StatusNotFound)
 		io.WriteString(w, "could not get main screen html file\n")
