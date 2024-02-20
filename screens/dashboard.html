@@ -3,14 +3,12 @@
 	<div class="sectionheader">
 		Inside
 	</div>
-	<span style="font-size:128">
-		<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:RpiTempHum1.Temperature" onChange=round(this,2)></div>
-		<div style="display:inline;font-size:48;" >F</div>
+	<span style="font-size:128pt">
+		<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:RpiTempHum1.Temperature" data-format="%.0f F"></div>
 	</span>
 
-	<span style="font-size:128">
-		<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:RpiTempHum1.Humidity" onChange=round(this,2)></div>
-		<div style="display:inline;font-size:48;" >%</div>
+	<span style="font-size:128pt">
+		<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:RpiTempHum1.Humidity" data-format="%.0f F"></div>
 	</span>
 </div>
 
@@ -19,14 +17,12 @@
 		Outside
 	</div>
 
-	<span style="font-size:128">
-	<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:Shed.Temp2" onChange=round(this,2)></div>
-	<div style="display:inline;font-size:48;" >F</div>
+	<span style="font-size:128pt">
+	<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:Shed.Temp2" data-format="%.0f F"></div>
 	</span>
 
-	<span style="font-size:128">
-	<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:Shed.RH2" onChange=round(this,2)></div>
-	<div style="display:inline;font-size:48;">%</div>
+	<span style="font-size:128pt">
+	<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:Shed.RH2" data-format="%.0f %%"></div>
 	</span>
 </div>
 
@@ -35,14 +31,12 @@
 		Garage
 	</div>
 
-	<span style="font-size:128">
-	<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:garage.Temp" onChange=round(this,2)></div>
-	<div style="display:inline;font-size:48;">F</div>
+	<span style="font-size:128pt">
+	<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:garage.Temp" data-format="%.0f F"></div>
 	</span>
 
-	<span style="font-size:128">
-	<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:garage.Pressure_InHG" onChange=round(this,5)></div>
-	<div style="display:inline;font-size:48">inHg
+	<span style="font-size:128pt">
+	<div class="autoload_value" style="display:inline"  data-target="GaragePLC/Program:garage.Pressure_InHG" data-format="%.2f inHg"></div>
 	<select class="autoload_value multistate_indicator" data-target="GaragePLC/Program:garage.HMI_Pressure_Status" value="0" style="font-size:48">
 		<option value="0"></option>
 		<option value="1" class="warn">&#x2191;</option>

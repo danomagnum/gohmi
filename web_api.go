@@ -23,7 +23,8 @@ func web_startup() {
 	mux.HandleFunc("/read_multi/", api_read_multi)
 	mux.HandleFunc("/write/{driver}/{tag...}", api_write)
 	mux.HandleFunc("/view/{screen}", api_view)
-	mux.Handle("/", http.FileServer(http.Dir("./static")))
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+	mux.HandleFunc("/", home)
 
 	var handler http.Handler = mux
 
@@ -75,4 +76,8 @@ func web_startup() {
 		log.Printf("Not starting HTTPS server (NOHTTPS = true)")
 	}
 
+}
+
+func home(w http.ResponseWriter, req *http.Request) {
+	http.Redirect(w, req, "/view/home", http.StatusSeeOther)
 }

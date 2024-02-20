@@ -1,38 +1,6 @@
 var DEBUG = 0;
 var DEBUG_NOREFRESH = 0;
 
-function find_parent(element){
-	p = element.parentElement;
-	if (p){
-		if (p.classList.contains('parent')){
-			return resolve_child_path(p);
-		}else{
-			return find_parent(p);
-		};
-	}else{
-		return '';
-
-	};
-};
-
-function resolve_child_path(element){
-	var tagpath = "";
-	if (element.hasAttribute("data-target")){
-		tagpath = element.getAttribute("data-target");
-	}else{
-		return "";
-	};
-
-	if (element.classList.contains('child')){
-		return find_parent(element) + "." + tagpath;
-
-	}else{
-		return tagpath;
-
-	};
-
-};
-
 
 function update_element_bulk(element, response){
 	// This function is like the other update element function but
@@ -40,13 +8,7 @@ function update_element_bulk(element, response){
 	// The goal is to have less requests to the base server by combining them.
 	var tagpath = element.getAttribute("data-target");
 	var prefix = ""
-	if (element.hasAttribute("data-prefix")){
-		prefix = element.getAttribute("data-prefix");
-	}
-	var postfix = ""
-	if (element.hasAttribute("data-postfix")){
-		postfix = element.getAttribute("data-postfix");
-	}
+
 	var tagname = tagpath;
 	var newdata =  response[tagname];
 
@@ -54,121 +16,32 @@ function update_element_bulk(element, response){
 		return;
 	};
 
-
-	if (element.classList.contains('parent')){
-		var subelements = element.getElementsByClassName("subitem");
-		[].forEach.call(subelements, function(subelement) {
-		update_element(subelement, newdata);
-		});
-	}else{
-		if (element.hasAttribute("value")){
-			if (document.activeElement == element) return;
-			element.value = newdata;
-		}else if(element.hasAttribute("data-value")){
-			element.setAttribute("data-value", newdata);
-		}else{
-			if (Array.isArray(newdata)){
-				element.innerHTML = "";
-				newdata.forEach(function(item){
-					element.innerHTML += prefix;
-					element.innerHTML += item;
-					element.innerHTML += postfix;
-				})
-			}else{
-				element.innerHTML = "";
-				element.innterHTML += prefix;
-				element.innerHTML += newdata;
-				element.innterHTML += postfix;
-			}
-
+	if (element.hasAttribute("data-format")){
+		let format = element.getAttribute("data-format");
+		try{
+			newdata = sprintf(format, response[tagpath]);
+		} catch (error) {
+  			console.error(error);
 		}
-		if (element.classList.contains("multistate_indicator")){
-			update_indicator(element);
-		}
-		/*
-		if (element.classList.contains("graph")){
-			update_graph(element);
-		}
-		*/
 	}
+
+	if (element.hasAttribute("value")){
+		if (document.activeElement == element) return;
+		element.value = newdata;
+	}else if(element.hasAttribute("data-value")){
+		element.setAttribute("data-value", newdata);
+	}else{
+		element.innerHTML = newdata;
+	}
+	if (element.classList.contains("multistate_indicator")){
+		update_indicator(element);
+	}
+		
 
 	if (element.hasAttribute("onchange")){
 		element.onchange();
 	}
 
-};
-
-
-
-function update_element(element, response){
-	var tagpath = element.getAttribute("data-target");
-	var prefix = ""
-	if (element.hasAttribute("data-prefix")){
-		prefix = element.getAttribute("data-prefix");
-	}
-	var postfix = ""
-	if (element.hasAttribute("data-postfix")){
-		postfix = element.getAttribute("data-postfix");
-	}
-	var tagname = tagpath.substring(tagpath.indexOf('/') + 1);
-	var newdata =  response[tagname];
-
-
-	if (element.classList.contains('parent')){
-		var subelements = element.getElementsByClassName("subitem");
-		[].forEach.call(subelements, function(subelement) {
-		update_element(subelement, newdata);
-		});
-	}else{
-		if (element.hasAttribute("value")){
-			element.value = newdata;
-		}else if(element.hasAttribute("data-value")){
-			element.setAttribute("data-value", newdata);
-		}else{
-			if (Array.isArray(newdata)){
-				element.innerHTML = "";
-				newdata.forEach(function(item){
-					element.innerHTML += prefix;
-					element.innerHTML += item;
-					element.innerHTML += postfix;
-				})
-			}else{
-				element.innerHTML = "";
-				element.innterHTML += prefix;
-				element.innerHTML += newdata;
-				element.innterHTML += postfix;
-			}
-
-		}
-		if (element.classList.contains("multistate_indicator")){
-			update_indicator(element);
-		}
-		/*
-		if (element.classList.contains("graph")){
-			update_graph(element);
-		}
-		*/
-	}
-
-	if (element.hasAttribute("onchange")){
-		element.onchange();
-	}
-
-};
-
-function add_datapoint(element){
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.onreadystatechange=function() {
-		if (this.readyState == 4 && this.status == 200) {
-			var response = JSON.parse(this.responseText);
-			update_element(element, response);
-		}
-	};
-
-	xmlhttp.overrideMimeType("application/json");
-	var path =  "/read/" + element.getAttribute("data-target");
-	xmlhttp.open("GET", path);
-	xmlhttp.send(null);
 };
 
 function refresh_all_data(response){
@@ -212,16 +85,6 @@ function get_all_datapoints(){
 	}
 };
 
-
-
-
-function refresh_data(){
-	var elements = document.getElementsByClassName("autoload_value");
-
-	[].forEach.call(elements, function(element) {
-		add_datapoint(element);
-	});
-};
 
 function update_indicator(element){
 	var sel = element.selectedIndex;
@@ -268,7 +131,7 @@ function setup_indicators(){
 
 function pb_momentary_press(element){
 	var xmlhttp = new XMLHttpRequest();
-	target = resolve_child_path(element)
+	target = element.getAttribute("data-target");
 
 	var path =  "/write/" + target
 	var params = 'value=' + element.getAttribute("data-press");
@@ -279,7 +142,7 @@ function pb_momentary_press(element){
 
 function pb_momentary_release(element){
 	var xmlhttp = new XMLHttpRequest();
-	target = resolve_child_path(element)
+	target = element.getAttribute("data-target");
 	var path =  "/write/" + target
 	var params = 'value=' + element.getAttribute("data-release");
 	xmlhttp.open("POST", path, true);
@@ -288,7 +151,7 @@ function pb_momentary_release(element){
 }
 
 function pb_toggle(element){
-	target = resolve_child_path(element)
+	target = element.getAttribute("data-target");
 	if (element.value == element.getAttribute("data-press")){
 		element.value = element.getAttribute("data-release");
 	}else{
@@ -304,7 +167,7 @@ function pb_toggle(element){
 }
 
 function input_submit(element){
-	target = resolve_child_path(element)
+	target = element.getAttribute("data-target");
 	
 
 	var xmlhttp = new XMLHttpRequest();
@@ -358,18 +221,14 @@ function setup_buttons(){
 			element.value = 0;
 		}
 
-		add_datapoint(element);
 		element.setAttribute("onclick", "pb_toggle(this)");
 
-		//element.setAttribute("onmousedown", "pb_momentary_press(this)");
-		//element.setAttribute("onmouseup", "pb_momentary_release(this)");
 	});
 
 };
 
 
 function update_all(){
-	//refresh_data();
 	get_all_datapoints()
 }
 
@@ -377,7 +236,7 @@ function startup(){
 	setup_indicators();
 	setup_buttons();
 	setup_inputs();
-	refresh_data();
+	//refresh_data();
 	if (! DEBUG_NOREFRESH){
 		setInterval(update_all, 500);
 	}
