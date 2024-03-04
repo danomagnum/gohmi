@@ -7,28 +7,38 @@ import (
 	"sync"
 	"time"
 
+	"github.com/danomagnum/admin"
 	"github.com/danomagnum/gologix"
 )
 
 type LogixDriver struct {
-	name         string
+	DriverName   string
 	m            sync.RWMutex
 	client       *gologix.Client
 	on_scan      map[string]*readdata
 	close_signal context.CancelFunc
 	status       string
-	rate         time.Duration
+	Rate         time.Duration
+	IP           string
+	Path         string
 }
 
-func NewLogixDriver(name, ip string, rate time.Duration) *LogixDriver {
+func NewLogixDriver(name, ip, path string, rate time.Duration) *LogixDriver {
 
 	drv := &LogixDriver{
-		name:    name,
-		on_scan: make(map[string]*readdata),
-		client:  gologix.NewClient(ip),
-		status:  "Never Started",
-		rate:    rate,
+		IP:         ip,
+		DriverName: name,
+		on_scan:    make(map[string]*readdata),
+		client:     gologix.NewClient(ip),
+		status:     "Never Started",
+		Rate:       rate,
+		Path:       path,
 	}
+	p, err := gologix.ParsePath(path)
+	if err != nil {
+		log.Panicf("bad path: %v", err)
+	}
+	drv.client.Path = p
 	return drv
 }
 
@@ -84,7 +94,7 @@ func (drv *LogixDriver) Status() string {
 }
 
 func (drv *LogixDriver) Name() string {
-	return drv.name
+	return drv.DriverName
 }
 
 func (drv *LogixDriver) run(ctx context.Context) {
@@ -99,7 +109,7 @@ func (drv *LogixDriver) run(ctx context.Context) {
 		drv.status = "stopped"
 	}()
 
-	t := time.NewTicker(drv.rate)
+	t := time.NewTicker(drv.Rate)
 
 	for {
 		select {
@@ -120,7 +130,7 @@ func (drv *LogixDriver) run(ctx context.Context) {
 			}
 			vals, err := drv.client.ReadList(tags, types, elements)
 			if err != nil {
-				log.Printf("error reading tags in driver %s: %v", drv.name, err)
+				log.Printf("error reading tags in driver %s: %v", drv.DriverName, err)
 				drv.status = fmt.Sprintf("error: %v", err)
 				continue
 			}
@@ -133,5 +143,29 @@ func (drv *LogixDriver) run(ctx context.Context) {
 			return
 
 		}
+	}
+}
+
+func (drv *LogixDriver) Change(a *admin.Admin, new_data any) {
+	n, ok := new_data.(*LogixDriver)
+	if !ok {
+		log.Printf("shoudl have gotten a *LogixDriver???")
+		return
+	}
+	drv.client.Disconnect()
+	drv.client.IPAddress = n.IP
+	p, err := gologix.ParsePath(n.Path)
+	if err != nil {
+		log.Panicf("bad path: %v", err)
+	}
+	drv.client.Path = p
+	drv.client.Connect()
+	drv.IP = n.IP
+	drv.Path = n.Path
+	drv.Rate = n.Rate
+	if drv.DriverName != n.DriverName {
+		a.UnRegisterStruct(drv.DriverName)
+		drv.DriverName = n.DriverName
+		a.RegisterStruct(drv.DriverName, drv)
 	}
 }

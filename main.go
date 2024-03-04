@@ -10,9 +10,8 @@ import (
 var drivers = map[string]Driver{}
 
 func main() {
-	go web_startup()
 
-	lgx := logix.NewLogixDriver("GaragePLC", "192.168.2.241", time.Second)
+	lgx := logix.NewLogixDriver("GaragePLC", "192.168.2.241", "1,0", time.Second)
 	drivers[lgx.Name()] = lgx
 
 	hmitag := hmitags.NewTagStore("builtin")
@@ -24,6 +23,7 @@ func main() {
 			slog.Error("failed to start %s: %w", k, err)
 		}
 	}
+	go web_startup()
 
 	select {}
 }

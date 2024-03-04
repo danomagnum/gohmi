@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/danomagnum/admin"
 )
 
 var NOHTTPS = flag.Bool("nohttps", false, "Disable https server")
@@ -25,6 +27,13 @@ func web_startup() {
 	mux.HandleFunc("/view/{screen}", api_view)
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	mux.HandleFunc("/", home)
+
+	adm := admin.NewAdmin(admin.SetDurationTimebase(time.Millisecond))
+	mux.Handle("/admin/", adm)
+
+	for _, d := range drivers {
+		adm.RegisterStruct(d.Name(), d)
+	}
 
 	var handler http.Handler = mux
 

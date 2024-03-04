@@ -5,16 +5,16 @@ import (
 )
 
 type TagStore struct {
-	name string
-	m    sync.RWMutex
-	data map[string]any
+	DriverName string
+	m          sync.RWMutex
+	data       map[string]any
 }
 
 func NewTagStore(name string) *TagStore {
 
 	return &TagStore{
-		name: name,
-		data: make(map[string]any),
+		DriverName: name,
+		data:       make(map[string]any),
 	}
 }
 
@@ -45,5 +45,5 @@ func (ts *TagStore) Status() string {
 	return "ok"
 }
 func (ts *TagStore) Name() string {
-	return ts.name
+	return ts.DriverName
 }

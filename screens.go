@@ -12,7 +12,7 @@ import (
 	"github.com/nikolalohinski/gonja/v2/exec"
 )
 
-var screenDir = flag.String("screendir", ".screens", "directory where screen .html files are located")
+var screenDir = flag.String("screendir", "./screens", "directory where screen .html files are located")
 
 func api_view(w http.ResponseWriter, req *http.Request) {
 	screen_name := req.PathValue("screen")
