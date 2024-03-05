@@ -15,6 +15,8 @@ var NOHTTP = flag.Bool("nohttp", false, "Disable http server")
 var portflag = flag.Int("port", 8000, "Port to listen for http connections on")
 var sslportflag = flag.Int("sslport", 8001, "Port to listen for https connections on")
 
+var Admin *admin.Admin
+
 func web_startup() {
 
 	mux := http.NewServeMux()
@@ -28,11 +30,10 @@ func web_startup() {
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	mux.HandleFunc("/", home)
 
-	adm := admin.NewAdmin(admin.SetDurationTimebase(time.Millisecond))
-	mux.Handle("/admin/", adm)
+	mux.Handle("/admin/", Admin)
 
 	for _, d := range drivers {
-		adm.RegisterStruct(d.Name(), d)
+		Admin.RegisterStruct(d.Name(), d)
 	}
 
 	var handler http.Handler = mux
