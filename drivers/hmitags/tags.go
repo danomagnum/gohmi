@@ -28,7 +28,8 @@ func (ts *TagStore) Read(key string) (any, error) {
 	return val, nil
 }
 
-func (ts *TagStore) Write(key string, value any) error {
+func (ts *TagStore) Write(key string, value string) error {
+	//todo: convert value to the proper type
 	ts.m.Lock()
 	defer ts.m.Unlock()
 	ts.data[key] = value

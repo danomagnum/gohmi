@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -40,13 +39,19 @@ func api_write(w http.ResponseWriter, req *http.Request) {
 		}
 		return
 	}
+	err := req.ParseForm()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		_, err := w.Write([]byte("No value specified."))
+		if err != nil {
+			slog.Error("failed to write bad tag value to %s: %w", req.RemoteAddr, err)
+		}
+		return
+	}
 
-	jdec := json.NewDecoder(req.Body)
-	var val any
+	val := req.FormValue("value")
 
-	jdec.Decode(&val)
-
-	err := driver.Write(tag_name, val)
+	err = driver.Write(tag_name, val)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		_, err := w.Write([]byte(fmt.Sprintf("error writing %s/%s = %v: %v", driver_name, tag_name, val, err)))

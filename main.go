@@ -16,14 +16,6 @@ var configDir = flag.String("configdir", "./config", "directory where config fil
 
 func main() {
 
-	/*
-		lgx := logix.NewLogixDriver("GaragePLC", "192.168.2.241", "1,0", time.Second)
-		drivers[lgx.Name()] = lgx
-
-		hmitag := hmitags.NewTagStore("builtin")
-		drivers[hmitag.Name()] = hmitag
-	*/
-
 	h := hmitags.LoadAll(*configDir)
 	for k, v := range h {
 		drivers[k] = v

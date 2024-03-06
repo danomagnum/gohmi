@@ -4,7 +4,7 @@ import "io"
 
 type Driver interface {
 	Read(key string) (any, error)
-	Write(key string, value any) error
+	Write(key string, value string) error
 	Start() error
 	Stop() error
 	Status() string

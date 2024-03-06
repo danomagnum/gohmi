@@ -71,8 +71,24 @@ func (drv *LogixDriver) Read(key string) (any, error) {
 	return dat.value, nil
 }
 
-func (drv *LogixDriver) Write(key string, value any) error {
-	return drv.client.Write(key, value)
+func (drv *LogixDriver) Write(key string, value string) error {
+	// the way this worked in the python version, we would pass the form value into pylogix's write and
+	// because python is duck typed it would just work.  Here though we can't do that.  So we'll read the
+	// tag first, and then convert the value into the same type that was returned when we did the read
+	// and then we can finally do the write
+	r, err := drv.client.Read_single(key, gologix.CIPTypeUnknown, 1)
+	if err != nil {
+		err = fmt.Errorf("problem reading %s before a write: %v", key, err)
+		log.Print(err.Error())
+		return err
+	}
+	typed, err := convertTypeFromString(value, r)
+	if err != nil {
+		err = fmt.Errorf("problem converting %s to a %T before a write: %v", key, r, err)
+		log.Print(err.Error())
+		return err
+	}
+	return drv.client.Write(key, typed)
 }
 
 func (drv *LogixDriver) Start() error {
