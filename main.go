@@ -15,6 +15,7 @@ var drivers = map[string]Driver{}
 var configDir = flag.String("configdir", "./config", "directory where config files are located")
 
 func main() {
+	flag.Parse()
 
 	h := hmitags.LoadAll(*configDir)
 	for k, v := range h {
