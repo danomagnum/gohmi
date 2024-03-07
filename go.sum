@@ -1,7 +1,7 @@
 github.com/MakeNowJust/heredoc v1.0.0 h1:cXCdzVdstXyiTqTvfqk9SDHpKNjxuom+DOlyEeQ4pzQ=
 github.com/MakeNowJust/heredoc v1.0.0/go.mod h1:mG5amYoWBHf8vpLOuehzbGGw0EHxpZZ6lCpQ4fNJ8LE=
-github.com/danomagnum/admin v0.0.0-20240304050126-72ba0b1b110f h1:3ZgVlPz8sdR4fj0J/JEQpSpNI4Z/ocJYeVmAYPHqYa4=
-github.com/danomagnum/admin v0.0.0-20240304050126-72ba0b1b110f/go.mod h1:ktFXTpeUy9F2E9n/7kvOHjR1vS4mLlSZZTIe2U4IXCw=
+github.com/danomagnum/admin v0.0.0-20240305035612-52a6d1b7424e h1:dsZAMQMmjXF8HpNZDMrc1BYrnA6aSM26okNAvxHVhDM=
+github.com/danomagnum/admin v0.0.0-20240305035612-52a6d1b7424e/go.mod h1:ktFXTpeUy9F2E9n/7kvOHjR1vS4mLlSZZTIe2U4IXCw=
 github.com/danomagnum/gologix v0.22.1-beta h1:ujzO4FDD0WWoWtlaQIwKqKIibMfvFDFo2pUGaYiZStA=
 github.com/danomagnum/gologix v0.22.1-beta/go.mod h1:D5p8IxiNgGnEb8syZlcsbyPdxTKDQkBJvimmq8Cmq4c=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -27,8 +27,8 @@ github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
-github.com/nikolalohinski/gonja/v2 v2.1.5 h1:oD8R+GpKMw6Xex9hmWvCQiWlvHfnbmSmu3F5nZ5eRI4=
-github.com/nikolalohinski/gonja/v2 v2.1.5/go.mod h1:l9DuWJvT/BddBr2SsmEimESD6msSqRw7u5HzI2Um+sc=
+github.com/nikolalohinski/gonja/v2 v2.2.0 h1:tAs3BDHNjvPj48F2BL5t7iVhN32HhgeldAl3EmdsLh8=
+github.com/nikolalohinski/gonja/v2 v2.2.0/go.mod h1:l9DuWJvT/BddBr2SsmEimESD6msSqRw7u5HzI2Um+sc=
 github.com/onsi/ginkgo/v2 v2.11.0 h1:WgqUCUt/lT6yXoQ8Wef0fsNn5cAuMK7+KT9UFRz2tcU=
 github.com/onsi/ginkgo/v2 v2.11.0/go.mod h1:ZhrRA5XmEE3x3rhlzamx/JJvujdZoJ2uvgI7kR0iZvM=
 github.com/onsi/gomega v1.27.8 h1:gegWiwZjBsf2DgiSbf5hpokZ98JVDMcWkUiigk6/KXc=
@@ -47,8 +47,8 @@ github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXl
 golang.org/x/net v0.16.0 h1:7eBu7KsSvFDtSXUIDbh3aqlK4DPsZ1rByC8PFfBThos=
 golang.org/x/net v0.16.0/go.mod h1:NxSsAGuq816PNPmqtQdLE42eU2Fs7NoRIZrHJAlaCOE=
 golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
-golang.org/x/sys v0.17.0 h1:25cE3gD+tdBA7lp7QfhuV+rJiE9YXTcS3VG1SqssI/Y=
-golang.org/x/sys v0.17.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
+golang.org/x/sys v0.18.0 h1:DBdB3niSjOA/O0blCZBqDefyWNYveAYMNF1Wum0DYQ4=
+golang.org/x/sys v0.18.0/go.mod h1:/VUhepiaJMQUp4+oa/7Zr1D23ma6VTLIYjOOTFZPUcA=
 golang.org/x/text v0.14.0 h1:ScX5w1eTa3QqT8oi6+ziP7dTV1S2+ALU0bI+0zXKWiQ=
 golang.org/x/text v0.14.0/go.mod h1:18ZOQIKpY8NJVqYksKHtTdi31H5itFRjB5/qKTNYzSU=
 golang.org/x/tools v0.14.0 h1:jvNa2pY0M4r62jkRQ6RwEZZyPcymeL9XZMLBbV7U2nc=
