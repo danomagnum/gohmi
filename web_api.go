@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
 	"log"
@@ -9,6 +10,9 @@ import (
 
 	"github.com/danomagnum/admin"
 )
+
+//go:embed static/*
+var staticFiles embed.FS
 
 var NOHTTPS = flag.Bool("nohttps", false, "Disable https server")
 var NOHTTP = flag.Bool("nohttp", false, "Disable http server")
@@ -27,7 +31,7 @@ func web_startup() {
 	mux.HandleFunc("/read_multi/", api_read_multi)
 	mux.HandleFunc("/write/{driver}/{tag...}", api_write)
 	mux.HandleFunc("/view/{screen}", api_view)
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticFiles))))
 	mux.HandleFunc("/", home)
 
 	mux.Handle("/admin/", Admin)
