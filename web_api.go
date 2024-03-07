@@ -31,7 +31,7 @@ func web_startup() {
 	mux.HandleFunc("/read_multi/", api_read_multi)
 	mux.HandleFunc("/write/{driver}/{tag...}", api_write)
 	mux.HandleFunc("/view/{screen}", api_view)
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticFiles))))
+	mux.Handle("/static/", http.FileServerFS(staticFiles))
 	mux.HandleFunc("/", home)
 
 	mux.Handle("/admin/", Admin)
