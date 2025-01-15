@@ -38,7 +38,7 @@ func NewLogixDriver(name, ip, path string, rate time.Duration) *LogixDriver {
 	if err != nil {
 		log.Panicf("bad path: %v", err)
 	}
-	drv.client.Path = p
+	drv.client.Controller.Path = p
 	return drv
 }
 
@@ -115,7 +115,7 @@ func (drv *LogixDriver) Name() string {
 
 func (drv *LogixDriver) run(ctx context.Context) {
 	drv.client.Connect()
-	if drv.client.Connected {
+	if drv.client.Connected() {
 		drv.status = "running. connected."
 	} else {
 		drv.status = "running. no connection."
@@ -171,12 +171,12 @@ func (drv *LogixDriver) Change(a *admin.Admin, new_data any) {
 		return
 	}
 	drv.client.Disconnect()
-	drv.client.IPAddress = n.IP
+	drv.client.Controller.IpAddress = n.IP
 	p, err := gologix.ParsePath(n.Path)
 	if err != nil {
 		log.Panicf("bad path: %v", err)
 	}
-	drv.client.Path = p
+	drv.client.Controller.Path = p
 	drv.client.Connect()
 	drv.IP = n.IP
 	drv.Path = n.Path

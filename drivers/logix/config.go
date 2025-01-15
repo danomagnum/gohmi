@@ -40,7 +40,7 @@ func (drv *LogixDriver) Load(r io.Reader) error {
 	if err != nil {
 		return fmt.Errorf("bad logix path: %v", err)
 	}
-	drv.client.Path = p
+	drv.client.Controller.Path = p
 
 	return nil
 }
