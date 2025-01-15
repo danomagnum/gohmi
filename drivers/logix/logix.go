@@ -138,6 +138,7 @@ func (drv *LogixDriver) run(ctx context.Context) {
 			for k := range drv.on_scan {
 				if time.Since(drv.on_scan[k].lastreq) > time.Minute {
 					delete(drv.on_scan, k)
+					drv.m.Unlock()
 					continue
 				}
 				tags = append(tags, k)
@@ -148,6 +149,7 @@ func (drv *LogixDriver) run(ctx context.Context) {
 			if err != nil {
 				log.Printf("error reading tags in driver %s: %v", drv.DriverName, err)
 				drv.status = fmt.Sprintf("error: %v", err)
+				drv.m.Unlock()
 				continue
 			}
 			for i := range tags {
