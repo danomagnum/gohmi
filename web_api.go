@@ -94,9 +94,11 @@ func web_startup() {
 
 }
 
+var staticDir = flag.String("staticdir", "./static", "directory where static files are located")
+
 func staticFileHandler() http.Handler {
 	embedded := http.FileServerFS(staticFiles)
-	disk := http.StripPrefix("/static/", http.FileServer(http.Dir("./static")))
+	disk := http.StripPrefix("/static/", http.FileServer(http.Dir(*staticDir)))
 
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		path := strings.TrimPrefix(req.URL.Path, "/static/")
