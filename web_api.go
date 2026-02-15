@@ -4,8 +4,10 @@ import (
 	"embed"
 	"flag"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/danomagnum/admin"
@@ -31,7 +33,7 @@ func web_startup() {
 	mux.HandleFunc("/read_multi/", api_read_multi)
 	mux.HandleFunc("/write/{driver}/{tag...}", api_write)
 	mux.HandleFunc("/view/{screen}", api_view)
-	mux.Handle("/static/", http.FileServerFS(staticFiles))
+	mux.Handle("/static/", staticFileHandler())
 	mux.HandleFunc("/", home)
 
 	mux.Handle("/admin/", Admin)
@@ -90,6 +92,26 @@ func web_startup() {
 		log.Printf("Not starting HTTPS server (NOHTTPS = true)")
 	}
 
+}
+
+func staticFileHandler() http.Handler {
+	embedded := http.FileServerFS(staticFiles)
+	disk := http.StripPrefix("/static/", http.FileServer(http.Dir("./static")))
+
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		path := strings.TrimPrefix(req.URL.Path, "/static/")
+		if path == req.URL.Path {
+			http.NotFound(w, req)
+			return
+		}
+
+		if _, err := fs.Stat(staticFiles, "static/"+path); err == nil {
+			embedded.ServeHTTP(w, req)
+			return
+		}
+
+		disk.ServeHTTP(w, req)
+	})
 }
 
 func home(w http.ResponseWriter, req *http.Request) {
